@@ -17,23 +17,25 @@
         <el-menu>
           <el-submenu index="1">
             <template slot="title">
-                <div @contextmenu="showMenu(ContextMenuData)">
-                   <vue-context-menu
-                     :contextMenuData="ContextMenuData"
-                     @newdata="newdata">
-                   </vue-context-menu>
-                  <span><i class="el-icon-message"></i>我的作品</span>
-                </div>
+              <div @contextmenu="showMenu(ContextMenuData)">
+                <vue-context-menu
+                  :contextMenuData="ContextMenuData"
+                  @newBookName="newBookName">
+                </vue-context-menu>
+                <span><i class="el-icon-message"></i>我的作品</span>
+              </div>
             </template>
             <!--url:[{mode:多兰大陆,files:[第一章，第二章]},....]-->
-            <sub-menu :bookItems="bookItems" @viewArticle="viewArticle" @showArticleMenu="showMenu"></sub-menu>
+            <sub-menu :bookItems="bookItems"
+                      @viewArticle="viewArticle"
+                      @editArticle="editArticle"></sub-menu>
           </el-submenu>
           <el-menu-item index="2">
             <!--url:[{bookname:斗破苍穹,author:天蚕土豆,type:novel,articleList:[]},....]-->
             <template slot="title">
               <div @click="showLocalResource">
-                  <i class="el-icon-menu"></i>
-                  本地资源
+                <i class="el-icon-menu"></i>
+                本地资源
               </div>
             </template>
           </el-menu-item>
@@ -53,7 +55,7 @@
         <div id="main">
           <transition>
             <keep-alive>
-              <router-view></router-view>
+              <router-view v-if="isRouterActice"></router-view>
             </keep-alive>
           </transition>
         </div>
@@ -66,21 +68,28 @@
 
   import SubMenu from "./SubMenu"
   import axios from 'axios'
+  import localStorage from '../util/localStorage'
 
   export default {
-    name: "home",
     data() {
       return {
         tempName: "",
-        bookItems: [],
+        bookItems:localStorage.readItems() || [],
         content: "",
         ContextMenuData: {
-          menuName: 'demo1',
+          menuName: 'handlerForBookList',
           axis: {x: null, y: null},
           menulists: [
-            {fnHandler: 'newdata', icoName: 'el-icon-more', btnName: '新建书籍'},
+            {fnHandler: 'newBookName', icoName: 'el-icon-more', btnName: '新建书籍'},
           ]
         },
+        isRouterActice:true
+      }
+    },
+    watch:{
+      bookItems:{
+          deep:true,
+          handler: localStorage.saveItems
       }
     },
     methods: {
@@ -89,8 +98,8 @@
           path: "/crawlStatus"
         })
       },
-      viewArticle(params){
-         this.$router.push({
+      viewArticle(params) {
+        this.$router.push({
           name: "showArticleInfos",
           params: params
         })
@@ -116,22 +125,59 @@
           x, y
         }
       },
-      newdata() {
-        console.log('newdata!')
+      newBookName() {
+        const bookName = prompt("请输入BookName:", null);
+        if (bookName == null) return;
+        const patern = /[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im;
+        if (patern.test(bookName)) {
+          alert("含有非法字符！");
+          return
+        }
+        for (var i = 0; i < this.bookItems.length; i++) {
+          if (bookName == this.bookItems[i].mode) {
+            alert("该书籍名已经存在!");
+            return
+          }
+        }
+        this.bookItems.push({
+          mode: bookName,
+          files: []
+        });
+      },
+      getBookList() {
+        axios.get('/api/custom/books/infos/').then(
+          response => {
+            const data = response.data;
+            if (data.status == 200) {
+              this.bookItems = JSON.parse(data.res);
+            }
+          }).catch(err => {
+          alert("请求出错了！" + err)
+          });
+      },
+      saveBookItemsDB(){
+        axios.post('/api/storage/books/infos/',
+            {
+              "bookItems":this.bookItems
+            },
+          ).then(
+            response => {
+              const data = response.data;
+              if (data.status == 200) {
+                console.log("storage");
+              }
+          }).catch(err => {
+          alert("请求出错了！" + err);
+        });
       }
     },
     mounted() {
-      axios.get('/api/custom/books/infos/').then(
-        response => {
-          const data = response.data;
-          if (data.status == 200) {
-            this.bookItems = JSON.parse(data.res);
-          }
-        }).catch(err => {
-        alert("请求出错了！" + err);
-      });
-    }
-    ,
+      if(this.bookItems.length==0){
+        this.getBookList()
+      } else {
+        this.saveBookItemsDB()
+      }
+    },
     components: {
       SubMenu,
     }

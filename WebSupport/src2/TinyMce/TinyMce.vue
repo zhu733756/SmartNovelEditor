@@ -58,8 +58,8 @@
       const that = this;
       this.tinymceInit = {
         skin_url: `/static/tinymce/skins/ui/oxide`,
-        // language_url: `/static/=tinymce/langs/zh_CN.js`,
-        // language: 'zh_CN',
+        language_url: `/static/tinymce/langs/zh_CN.js`,
+        language: 'zh_CN',
         indent_use_margin: true,
         indentation: 20,
         height: document.documentElement.clientHeight,
@@ -68,10 +68,10 @@
         elementpath: false,  //禁用编辑器底部的状态栏
         statusbar: true, // 隐藏编辑器底部的状态栏
         paste_data_images: true, // 允许粘贴图像
-        menu: ['file', "edit", "view"],
+        menubar: ['file', "edit", "view"],
         plugins: 'advlist table lists paste preview fullscreen',
         toolbar: [
-          'fontselect fontsizeselect forecolor backcolor bold italic underline strikethrough',
+          'fontselect fontsizeselect',
           'alignleft aligncenter alignright alignjustify | quicklink h2 h3 preview fullscreen save'
         ],
         setup: (editor) => {
@@ -90,9 +90,8 @@
             // 使用tinymce save图标插件
             tooltip: 'save',
             onAction: () => {
-              console.log(this.isChanged);
               if (this.isChanged) {
-                axios.get('/api/tinymce/store/', {params: this.saveParams}).then(
+                axios.post('/api/tinymce/store/', this.saveParams).then(
                   response => {
                     const data = response.data;
                     if (data.status == 200) {
@@ -102,6 +101,8 @@
                 ).catch(err => {
                   alert("请求出错！")
                 })
+              } else{
+                alert("未检测到页面发生修改！")
               }
             }
           });

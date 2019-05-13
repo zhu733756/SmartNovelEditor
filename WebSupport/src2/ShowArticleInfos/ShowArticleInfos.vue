@@ -1,6 +1,6 @@
 <template>
   <div class="article-show">
-    <div class="title" align="center" v-if="!isClick">
+    <div class="title" align="center">
       <h2>
         <a href="javascript:void(0)" @click="editArticles">
           {{title}}
@@ -20,24 +20,22 @@
     name: "viewArticle",
     data() {
       return {
-        isClick: false
+        params:{}
       }
     },
     computed: {
       content: function () {
-        return this.$route.params.content
+        return this.params.content
       },
       title: function () {
-        return this.$route.params.file
+        return this.params.file
       },
-      params: function () {
-        return this.$route.params
-      }
     },
-    mounted(){
-      const temp = $("div.paragraphs").html(this.content);
-      console.log(temp);
-      return temp
+    watch:{
+      '$route':function (to,from) {
+        this.params=this.$route.params;
+        $("div.paragraphs").html(this.content);
+      }
     },
     methods: {
       editArticles() {
@@ -47,7 +45,7 @@
             params: this.params
           }
         )
-      }
+      },
     },
   }
 </script>
