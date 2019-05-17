@@ -2,3 +2,5 @@
 # @Time    : 2019/5/13 17:55
 # @Author  : zhu733756
 # @FileName: __init__.py
+
+from .biquge5200 import BookInfoSpider
