@@ -4,9 +4,7 @@
 # @FileName: urls.py
 
 from django.conf.urls import url
-from .views import save_tinymce_content_as_txt,\
-    get_list_from_txt,save_book_items,\
-    get_article_from_path,search_biquge5200
+from .views import *
 
 urlpatterns = [
     url('^tinymce/store/$',save_tinymce_content_as_txt),
@@ -14,4 +12,5 @@ urlpatterns = [
     url('^storage/books/infos/$',save_book_items),
     url('^custom/articles/$',get_article_from_path),
     url('^spiders/biquge5200/search/$',search_biquge5200),
+    url('^spiders/infos/$',get_query_infos),
 ]

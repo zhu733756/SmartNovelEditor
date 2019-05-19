@@ -25,13 +25,11 @@
                 <span><i class="el-icon-message"></i>我的作品</span>
               </div>
             </template>
-            <!--url:[{mode:多兰大陆,files:[第一章，第二章]},....]-->
             <sub-menu :bookItems="bookItems"
                       @viewArticle="viewArticle"
                       @editArticle="editArticle"></sub-menu>
           </el-submenu>
           <el-menu-item index="2">
-            <!--url:[{bookname:斗破苍穹,author:天蚕土豆,type:novel,articleList:[]},....]-->
             <template slot="title">
               <div @click="showLocalResource">
                 <i class="el-icon-menu"></i>
@@ -40,9 +38,8 @@
             </template>
           </el-menu-item>
           <el-menu-item index="3">
-            <!--url:[{bookname:斗破苍穹,author:天蚕土豆,type:novel,spider:biquge5200,progressBar:50%,status:preparing},....]-->
             <template slot="title">
-              <div @click="showCrawlStaus">
+              <div @click="showOnlineResource">
                 <i class="el-icon-ice-cream"></i>
                 在线引擎
               </div>
@@ -55,7 +52,7 @@
         <div id="main">
           <transition>
             <keep-alive>
-              <router-view v-if="isRouterActice"></router-view>
+              <router-view></router-view>
             </keep-alive>
           </transition>
         </div>
@@ -83,7 +80,6 @@
             {fnHandler: 'newBookName', icoName: 'el-icon-more', btnName: '新建书籍'},
           ]
         },
-        isRouterActice:true
       }
     },
     watch:{
@@ -93,9 +89,9 @@
       }
     },
     methods: {
-      showCrawlStaus() {
+      showOnlineResource() {
         this.$router.push({
-          path: "/crawlStatus"
+          path: "/onlineResource"
         })
       },
       viewArticle(params) {

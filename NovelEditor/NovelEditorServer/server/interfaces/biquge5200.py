@@ -40,11 +40,12 @@ class BookInfoSpider(object):
         else:
             all_res = arg_res if arg_res else kw_res
 
-        sorted_res = {}
-        for info in all_res:
-            author = info.pop("author")
-            sorted_res.setdefault(author, []).append(info)
-        return sorted_res
+        # sorted_res = {}
+        # for info in all_res:
+        #     author = info.pop("author")
+        #     sorted_res.setdefault(author, []).append(info)
+        # return sorted_res
+        return list(all_res)
 
     @staticmethod
     def remove_duplicate(dup_list):

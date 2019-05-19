@@ -11,7 +11,7 @@
               @editBookName="editBookName(item)"
               @deleteAll="deleteAll(item)">
             </vue-context-menu>
-            <span slot="title"><i class="el-icon-menu"></i>{{ item.mode }}</span>
+            <span slot="title"><i class="el-icon-notebook-2"></i>{{ item.mode }}</span>
           </div>
         </template>
         <template style="padding-left:10px">

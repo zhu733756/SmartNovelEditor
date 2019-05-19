@@ -92,3 +92,10 @@ def search_biquge5200(requst):
         return JsonResponse({"status": 404, "res": "Cannot find the source on {}"
                             .format(sys._getframe().f_code.co_name)})
     return JsonResponse({"status": 200, "res": res})
+
+@csrf_exempt
+def get_query_infos(request):
+
+    urls=json.loads(request.body.decode())["urls"]
+    print(urls)
+    return JsonResponse({"status":200})
