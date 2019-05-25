@@ -1,5 +1,5 @@
-/NovelEditor/NovelEditorServer/NovelEditorServer/settings.py
-/NovelEditor/NovelEditorServer/NovelEditorServer/log/
+/NovelEditorServer/NovelEditorServer/settings.py
+/NovelEditorServer/NovelEditorServer/log/
 .DS_Store
 node_modules/
 /WebSupport/dist/

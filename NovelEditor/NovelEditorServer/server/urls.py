@@ -6,6 +6,7 @@
 from django.conf.urls import url
 from .views import *
 
+
 urlpatterns = [
     url('^tinymce/store/$',save_tinymce_content_as_txt),
     url('^custom/books/infos/$',get_list_from_txt),
